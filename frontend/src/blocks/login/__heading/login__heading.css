@@ -1,0 +1,17 @@
+.login__heading {
+  margin: 0 0 41px;
+  padding: 34px 0 0 0;
+  font-style: normal;
+  font-weight: 900;
+  font-size: 24px;
+  line-height: 29px;
+  color: white;
+}
+
+@media screen and (max-width: 767px) {
+  .login__heading {
+    font-size: 18px;
+    margin: 0 0 74px;
+    line-height: 17px;
+  }
+}

@@ -1,0 +1,20 @@
+.profile__username {
+  align-self: flex-end;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  font-family: Inter;
+  font-weight: 500;
+  font-size: 42px;
+  line-height: 48px;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+@media screen and (max-width: 767px) {
+  .profile__username {
+    font-size: 22px;
+    line-height: 27px;
+  }
+}

@@ -1,0 +1,5 @@
+.profile__image-container {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}

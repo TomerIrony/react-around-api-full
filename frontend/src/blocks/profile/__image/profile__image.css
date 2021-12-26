@@ -1,0 +1,17 @@
+.profile__image {
+  max-width: 120.75px;
+  width: 100%;
+  border-radius: 50%;
+  transition: linear 0.4s;
+  height: 120px;
+}
+
+@media screen and (max-width: 767px) {
+  .profile__image {
+    align-self: center;
+  }
+}
+
+.profile__image:hover {
+  opacity: 0.5;
+}

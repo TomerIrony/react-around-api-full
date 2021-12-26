@@ -1,0 +1,15 @@
+.login__fieldset {
+  font-family: 'Inter', Arial, Helvetica, sans-serif;
+  border: none;
+  padding: 0;
+  margin: 0px 36px 36px;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+@media screen and (max-width: 767px) {
+  .login__fieldset {
+    margin: 25px 22px;
+  }
+}

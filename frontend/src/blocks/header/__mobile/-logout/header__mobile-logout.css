@@ -1,0 +1,23 @@
+.header__mobile-logout {
+  font-family: 'Inter', Arial, Helvetica, sans-serif;
+  font-size: 18px;
+  line-height: 101%;
+  color: #a9a9a9;
+  margin: 0 0 40px 0;
+  text-align: center;
+}
+
+@media screen and (min-width: 768px) {
+  .header__mobile-logout {
+    display: flex;
+    justify-content: flex-end;
+    margin: auto 0;
+    max-width: auto;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .header__mobile-logout {
+    display: none;
+  }
+}

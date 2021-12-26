@@ -1,0 +1,9 @@
+.card__like-numbers {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Inter", Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  text-align: center;
+  font-style: "regular";
+}

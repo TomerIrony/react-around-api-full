@@ -1,0 +1,8 @@
+.form__validation {
+  color: red;
+  font-size: 12px;
+  font-family: "Inter", Arial, Helvetica, sans-serif;
+  line-height: 15px;
+  margin: 5px 0 0 0;
+  visibility: hidden;
+}
