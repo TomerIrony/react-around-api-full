@@ -6,6 +6,7 @@ const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const cardsRoutes = require('./routes/cards');
 const userRoutes = require('./routes/users');
+const NotFoundError = require('./errors/not-found-err');
 
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // in 15 minutes
@@ -47,7 +48,10 @@ app.get('/crash-test', () => {
 });
 app.use('/', cardsRoutes);
 app.use('/', userRoutes);
-app.use((req, res) => {
-  res.status(404).send({ message: 'Requested resource not found' });
+app.use((req, res, next) => {
+  next(new NotFoundError('Requested resource not found'));
+});
+app.use((err, req, res, next) => {
+  res.status(err.statusCode).send({ message: err.message });
 });
 app.listen(PORT, () => {});

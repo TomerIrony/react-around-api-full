@@ -47,22 +47,14 @@ class Auth {
       },
     }).then(this._checkResponse);
   }
-
-  /*   getUser(JWT) {
-    return fetch(`${this._url}/users/me`, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${JWT}`,
-      },
-    }).then((res) => {
-      console.log(res);
-    });
-  } */
 }
 
-const auth = new Auth({
+/* const auth = new Auth({
   baseUrl: 'https://api.tomer.students.nomoreparties.site',
+}); */
+
+const auth = new Auth({
+  baseUrl: 'http://localhost:3000',
 });
 
 export default auth;

@@ -6,17 +6,9 @@ const ValdiationError = require('../errors/validation-err');
 const ConflitError = require('../errors/confilt-err');
 const CastError = require('../errors/confilt-err');
 const ServerError = require('../errors/server-err');
+const AuthorizationError = require('../errors/auth-err');
 
 require('dotenv').config();
-
-module.exports.getUsers = (req, res) => {
-  User.findById({ _id: req.user._id })
-    .then((users) => res.status(200).send({ data: users }))
-    .catch(() => {
-      throw new ServerError('Server Error');
-    })
-    .catch(next);
-};
 
 module.exports.createUser = (req, res, next) => {
   bcrypt.hash(req.body.password, 10).then((hash) => {
@@ -46,7 +38,7 @@ module.exports.login = (req, res, next) => {
     .select('+password')
     .then((user) => {
       if (!user) {
-        throw new NotFoundError('Inncorrect password or email');
+        throw new AuthorizationError('UNAUTHORIZED REQUEST');
       }
       bcrypt.compare(password, user.password).then((bycrpytres) => {
         if (bycrpytres) {
@@ -56,7 +48,8 @@ module.exports.login = (req, res, next) => {
             }),
           });
         }
-        return res.status(401).send('Inncorrect password or email');
+        throw new AuthorizationError('UNAUTHORIZED REQUEST');
+        return;
       });
     })
     .catch((err) => {

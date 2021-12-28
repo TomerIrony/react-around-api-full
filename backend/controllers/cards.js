@@ -1,8 +1,7 @@
 const Card = require('../models/card');
 const NotFoundError = require('../errors/not-found-err');
 const ValdiationError = require('../errors/validation-err');
-const ConflitError = require('../errors/confilt-err');
-const CastError = require('../errors/confilt-err');
+const CastError = require('../errors/cast-err');
 const ServerError = require('../errors/server-err');
 
 module.exports.getCards = (req, res, next) => {
@@ -25,6 +24,8 @@ module.exports.createCard = (req, res) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         throw new ValdiationError('Valdiation Error');
+      } else {
+        throw new ServerError('Server Error');
       }
     });
 };

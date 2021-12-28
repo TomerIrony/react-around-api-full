@@ -105,7 +105,11 @@ class Api {
   }
 }
 
-const api = new Api({
+/* const api = new Api({
   baseUrl: 'https://api.tomer.students.nomoreparties.site',
+}); */
+
+const api = new Api({
+  baseUrl: 'http://localhost:3000',
 });
 export default api;
