@@ -62,7 +62,7 @@ class Auth {
 }
 
 const auth = new Auth({
-  baseUrl: 'http://localhost:3000',
+  baseUrl: 'http://api.tomer.students.nomoreparties.site',
 });
 
 export default auth;

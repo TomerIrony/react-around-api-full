@@ -40,8 +40,6 @@ module.exports.deleteCardById = (req, res, next) => {
       } else if (err.name === 'DocumentNotFoundError') {
         throw new NotFoundError('No Card found with that id');
       } else {
-        console.log(err);
-        return;
         throw new ServerError('Server Error');
       }
     })
