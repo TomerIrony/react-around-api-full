@@ -2,6 +2,10 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
 const NotFoundError = require('../errors/not-found-err');
+const ValdiationError = require('../errors/validation-err');
+const ConflitError = require('../errors/confilt-err');
+const CastError = require('../errors/confilt-err');
+const ServerError = require('../errors/server-err');
 
 require('dotenv').config();
 
@@ -9,28 +13,33 @@ module.exports.getUsers = (req, res) => {
   User.findById({ _id: req.user._id })
     .then((users) => res.status(200).send({ data: users }))
     .catch(() => {
-      res.status(500).send({ message: 'Error' });
-    });
+      throw new ServerError('Server Error');
+    })
+    .catch(next);
 };
 
-module.exports.createUser = (req, res) => {
+module.exports.createUser = (req, res, next) => {
   bcrypt.hash(req.body.password, 10).then((hash) => {
     User.create({
       email: req.body.email,
       password: hash,
     })
-      .then((user) => res.send(user))
+      .then((user) => {
+        const { password, ...resoponseUser } = user._doc;
+        res.send(resoponseUser);
+      })
       .catch((err) => {
         if ((err.code = 11000)) {
-          res.status(409).send('email is already in use');
+          throw new ConflitError('email is already in use');
           return;
         }
-        res.status(500).send(err);
-      });
+        throw new ServerError('Server Error');
+      })
+      .catch(next);
   });
 };
 
-module.exports.login = (req, res) => {
+module.exports.login = (req, res, next) => {
   const { email, password } = req.body;
   console.log(email, password);
   User.findOne({ email })
@@ -51,12 +60,15 @@ module.exports.login = (req, res) => {
       });
     })
     .catch((err) => {
-      console.log(err);
-      res.status(500).send({ message: err.message });
-    });
+      if (err.statusCode === 404) {
+        throw new NotFoundError('Inncorrect password or email');
+      }
+      throw new ServerError('Server Error');
+    })
+    .catch(next);
 };
 
-module.exports.updateProfile = (req, res) => {
+module.exports.updateProfile = (req, res, next) => {
   const { name, about } = req.body;
   User.findByIdAndUpdate(
     req.user._id,
@@ -68,16 +80,15 @@ module.exports.updateProfile = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(400).send({
-          message: 'Invalid data passed to the methods Error Message',
-        });
+        throw new ValdiationError('Invalid data passed to the methods');
       } else {
-        res.status(500).send({ message: err.message });
+        throw new ServerError('Server Error');
       }
-    });
+    })
+    .catch(next);
 };
 
-module.exports.updateAvatar = (req, res) => {
+module.exports.updateAvatar = (req, res, next) => {
   const { avatar } = req.body;
   User.findByIdAndUpdate(
     req.user._id,
@@ -89,26 +100,26 @@ module.exports.updateAvatar = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(400).send({
-          message: `Invalid data passed to the methods Error Message:  ${err.message}`,
-        });
+        throw new ValdiationError('Invalid data passed to the methods');
       } else {
-        res.status(500).send({ message: err.message });
+        throw new ServerError('Server Error');
       }
-    });
+    })
+    .catch(next);
 };
 
-module.exports.getUser = (req, res) => {
+module.exports.getUser = (req, res, next) => {
   User.findById({ _id: req.user._id })
     .orFail()
     .then((user) => res.status(200).send(user))
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(400).send({ message: 'Invalid ID' });
+        throw new CastError('Invalid ID');
       } else if (err.name === 'DocumentNotFoundError') {
-        res.status(404).send({ message: 'No User found with that id' });
+        throw new NotFoundError('No User found with that id');
       } else {
-        res.status(500).send({ message: err.message });
+        throw new ServerError('Server Error');
       }
-    });
+    })
+    .catch(next);
 };

@@ -1,11 +1,17 @@
 const Card = require('../models/card');
+const NotFoundError = require('../errors/not-found-err');
+const ValdiationError = require('../errors/validation-err');
+const ConflitError = require('../errors/confilt-err');
+const CastError = require('../errors/confilt-err');
+const ServerError = require('../errors/server-err');
 
-module.exports.getCards = (req, res) => {
+module.exports.getCards = (req, res, next) => {
   Card.find({})
     .then((card) => res.status(200).send(card))
     .catch(() => {
-      res.status(500).send({ message: 'Error' });
-    });
+      throw new ServerError('Server Error');
+    })
+    .catch(next);
 };
 
 module.exports.createCard = (req, res) => {
@@ -18,29 +24,31 @@ module.exports.createCard = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res.status(400).send(err);
+        throw new ValdiationError('Valdiation Error');
       }
     });
 };
 
-module.exports.deleteCardById = (req, res) => {
+module.exports.deleteCardById = (req, res, next) => {
   Card.findByIdAndDelete({ _id: req.params.cardId })
-    .orFail()
     .then(() => {
       res.status(200).send({ message: 'Card has been deleted' });
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(400).send({ message: 'Invalid id' });
+        throw new CastError('Invalid id');
       } else if (err.name === 'DocumentNotFoundError') {
-        res.status(404).send({ message: 'No Card found with that id' });
+        throw new NotFoundError('No Card found with that id');
       } else {
-        res.status(500).send({ message: err.message });
+        console.log(err);
+        return;
+        throw new ServerError('Server Error');
       }
-    });
+    })
+    .catch(next);
 };
 
-module.exports.likeCard = (req, res) => {
+module.exports.likeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $addToSet: { likes: req.user._id } },
@@ -52,31 +60,32 @@ module.exports.likeCard = (req, res) => {
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(400).send({ message: 'Invalid id' });
+        throw new CastError('Invalid id');
       } else if (err.name === 'DocumentNotFoundError') {
-        res.status(404).send({ message: 'No Card found with that id' });
+        throw new NotFoundError('No Card found with that id');
       } else {
-        res.status(500).send({ message: err.message });
+        throw new ServerError('Server Error');
       }
-    });
+    })
+    .catch(next);
 };
-module.exports.dislikeCard = (req, res) => {
+module.exports.dislikeCard = (req, res, next) => {
   Card.findByIdAndUpdate(
     req.params.cardId,
     { $pull: { likes: req.user._id } },
     { new: true }
   )
-    .orFail()
     .then((card) => {
       res.status(200).send(card);
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(400).send({ message: 'Invalid id' });
+        throw new CastError('Invalid id');
       } else if (err.name === 'DocumentNotFoundError') {
-        res.status(404).send({ message: 'No Card found with that id' });
+        throw new NotFoundError('No Card found with that id');
       } else {
-        res.status(500).send({ message: err.message });
+        throw new ServerError('Server Error');
       }
-    });
+    })
+    .catch(next);
 };

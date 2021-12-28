@@ -1,8 +1,8 @@
-class ValdiationError extends Error {
+class CastError extends Error {
   constructor(message) {
     super(message);
     this.statusCode = 400;
   }
 }
 
-module.exports = ValdiationError;
+module.exports = CastError;
