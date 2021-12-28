@@ -106,6 +106,6 @@ class Api {
 }
 
 const api = new Api({
-  baseUrl: 'http://api.tomer.students.nomoreparties.site',
+  baseUrl: 'https://api.tomer.students.nomoreparties.site',
 });
 export default api;
