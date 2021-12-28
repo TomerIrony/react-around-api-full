@@ -1,4 +1,6 @@
 const Card = require('../models/card');
+const NotFoundError = require('../errors/not-found-err');
+const AuthorizationError = require('../errors/auth-err');
 
 module.exports = (req, res, next) => {
   Card.findById({ _id: req.params.cardId })
@@ -6,10 +8,11 @@ module.exports = (req, res, next) => {
       if (card.owner.toString() === req.user._id) {
         next();
       } else {
-        return res.status(403).send({ message: 'Authorization Required' });
+        throw new AuthorizationError('Authorization Required');
       }
     })
     .catch(() => {
-      res.status(404).send('Card not found');
-    });
+      throw new NotFoundError('Card not found');
+    })
+    .catch(next);
 };

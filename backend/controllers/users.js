@@ -18,14 +18,15 @@ module.exports.createUser = (req, res, next) => {
     })
       .then((user) => {
         const { password, ...resoponseUser } = user._doc;
+        console.log(password);
         res.send(resoponseUser);
       })
       .catch((err) => {
-        if ((err.code = 11000)) {
+        if (err.code === 11000) {
           throw new ConflitError('email is already in use');
-          return;
+        } else {
+          throw new ServerError('Server Error');
         }
-        throw new ServerError('Server Error');
       })
       .catch(next);
   });
@@ -49,7 +50,6 @@ module.exports.login = (req, res, next) => {
           });
         }
         throw new AuthorizationError('UNAUTHORIZED REQUEST');
-        return;
       });
     })
     .catch((err) => {

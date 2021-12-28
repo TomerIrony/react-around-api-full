@@ -1,11 +1,12 @@
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
+const AuthorizationError = require('../errors/auth-err');
 
 module.exports = (req, res, next) => {
   const { authorization } = req.headers;
 
   if (!authorization || !authorization.startsWith('Bearer ')) {
-    return res.status(401).send({ message: 'Authorization Required' });
+    throw new AuthorizationError('Authorization Required');
   }
 
   const token = authorization.replace('Bearer ', '');
@@ -14,7 +15,7 @@ module.exports = (req, res, next) => {
   try {
     payload = jwt.verify(token, process.env.JWT_SECRET);
   } catch (err) {
-    return res.status(401).send({ message: 'Authorization Required' });
+    throw new AuthorizationError('Authorization Required');
   }
 
   req.user = payload; //
